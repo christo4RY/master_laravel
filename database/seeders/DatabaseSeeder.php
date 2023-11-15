@@ -16,18 +16,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $confirm = $this->command->confirm('Are you sure for database refresh', true);
-        if($confirm) {
+        if ($confirm) {
             $this->command->call('migrate:fresh');
             $this->command->info('database refreshed.');
         }
 
-        Cache::tags(['blogs','authors'])->flush();
+        Cache::tags(['blogs', 'authors'])->flush();
 
-            $this->call([
-                UserSeeder::class,
-                BlogSeeder::class,
-                CommentSeeder::class
-            ]);
+        $this->call([UserSeeder::class, BlogSeeder::class, CommentSeeder::class, TagSeeder::class, BlogTagSeeder::class]);
     }
-
 }

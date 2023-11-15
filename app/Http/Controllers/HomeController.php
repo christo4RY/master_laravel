@@ -12,17 +12,8 @@ class HomeController extends Controller
 {
     public function __invoke()
     {
-        $blogs = Cache::tags(['blogs'])->remember('blogs',30,fn () => Blog::latest()->withCount('comments')->with('author')->get());
-        $mostCommentedBlogs = Cache::remember('mostCommentedBlogs',30,fn () => Blog::mostCommentBlog()->take(5)->get());
-        $authors = Cache::remember('authors',30,fn () => User::withMostBlogPosts()->take(5)->get());
-        $lastMonthBlog = Cache::remember('lastMonthBlog',30,fn () => User::withMostBlogPostsLastMonth()->take(3)->get());
-
-        return view('blog.index', [
-            'blogs'=>$blogs,
-            'mostCommentedBlogs'=>$mostCommentedBlogs,
-            'authors'=>$authors,
-            'lastMonthBlog'=>$lastMonthBlog
-        ]);
+        $blogs = Cache::tags(['blogs'])->remember('blogs',30,fn () => Blog::latest()->withCount('comments')->with('author')->with('tags')->get());
+        return view('blog.index',['blogs'=>$blogs]);
 
     }
 }

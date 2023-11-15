@@ -34,7 +34,9 @@ class Blog extends Model
         return $builder->withCount('comments')->orderBy('comments_count','desc');
     }
 
-
+    public function tags(){
+        return $this->belongsToMany(Tag::class)->as('tagging');
+    }
 
      public static function boot()
      {

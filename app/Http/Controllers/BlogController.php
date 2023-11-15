@@ -23,17 +23,9 @@ class BlogController extends Controller
      */
     public function index()
     {
-        $blogs = Cache::tags(['blogs'])->remember('blogs',30,fn () => Blog::latest()->withCount('comments')->with('author')->get());
-        $mostCommentedBlogs = Cache::tags(['blogs'])->remember('mostCommentedBlogs',30,fn () => Blog::mostCommentBlog()->take(5)->get());
-        $authors = Cache::tags(['authors'])->remember('authors',30,fn () => User::withMostBlogPosts()->take(5)->get());
-        $lastMonthBlog = Cache::tags(['authors'])->remember('lastMonthBlog',30,fn () => User::withMostBlogPostsLastMonth()->take(3)->get());
+        $blogs = Cache::tags(['blogs'])->remember('blogs',30,fn () => Blog::latest()->withCount('comments')->with('author')->with('tags')->get());
 
-        return view('blog.index', [
-            'blogs'=>$blogs,
-            'mostCommentedBlogs'=>$mostCommentedBlogs,
-            'authors'=>$authors,
-            'lastMonthBlog'=>$lastMonthBlog
-        ]);
+        return view('blog.index',['blogs'=>$blogs]);
     }
 
     /**
@@ -59,7 +51,7 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
-        $showBlog  = Cache::remember("show-blog-{$blog->id}",30,fn () => $blog->load('comments'));
+        $showBlog  = Cache::remember("show-blog-{$blog->id}",30,fn () => $blog->load(['comments','tags']));
 
         $sessionId = session()->getId();
         $counterKey = "blog-{$blog->id}-counter";
