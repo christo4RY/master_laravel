@@ -34,6 +34,10 @@ class Blog extends Model
         return $builder->withCount('comments')->orderBy('comments_count','desc');
     }
 
+    public function scopeLatestWithRelation(Builder $builder){
+        return $builder->latest()->withCount('comments')->with(['author','tags'])->get();
+    }
+
     public function tags(){
         return $this->belongsToMany(Tag::class)->as('tagging');
     }
@@ -44,10 +48,11 @@ class Blog extends Model
          parent::boot();
          self::deleting(function (Blog $blog) {
              $blog->comments()->delete();
+             Cache::tags(['blogs'])->forget("show-blog-{$blog->id}");
          });
 
          self::updating(function(Blog $blog){
-             Cache::forget("show-blog-{$blog->id}");
+             Cache::tags(['blogs'])->forget("show-blog-{$blog->id}");
          });
          self::restoring(function(Blog $blog){
              $blog->comments()->restore();

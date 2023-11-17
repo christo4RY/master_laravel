@@ -23,7 +23,7 @@ class BlogController extends Controller
      */
     public function index()
     {
-        $blogs = Cache::tags(['blogs'])->remember('blogs',30,fn () => Blog::latest()->withCount('comments')->with('author')->with('tags')->get());
+        $blogs = Cache::tags(['blogs'])->remember('blogs',30,fn () => Blog::latestWithRelation());
 
         return view('blog.index',['blogs'=>$blogs]);
     }
@@ -51,7 +51,7 @@ class BlogController extends Controller
      */
     public function show(Blog $blog)
     {
-        $showBlog  = Cache::remember("show-blog-{$blog->id}",30,fn () => $blog->load(['comments','tags']));
+        $showBlog  = Cache::tags(['blogs'])->remember("show-blog-{$blog->id}",30,fn () => $blog->load(['comments','tags']));
 
         $sessionId = session()->getId();
         $counterKey = "blog-{$blog->id}-counter";

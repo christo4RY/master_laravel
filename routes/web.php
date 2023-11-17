@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\ProfileController;
@@ -17,6 +18,7 @@ Route::get('/dashboard', function () {
 Route::resource('blogs', BlogController::class);
 Route::get('blog/tag/{tag}', [TagController::class, 'index'])->name('tag.index');
 
+Route::post('blogs/{blog}/comment',[CommentController::class,'store'])->name('comment.store');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

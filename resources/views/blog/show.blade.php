@@ -14,6 +14,11 @@
             @endcomponent
             <div>
                 <h4 class="text-xl">Comments</h4>
+                @auth
+                    @include('comment._form',['blog'=>$blog])
+                @else
+                    <h3><a href="{{ route('login') }}" class=" underline text-blue-500">Sign in</a> Please Login </h3>
+                @endauth
                 @forelse ($blog->comments as $comment)
                     @component('components.comment', ['type' => 'blue'])
                         <p class="text-sm ">{{ $comment->content }}</p>

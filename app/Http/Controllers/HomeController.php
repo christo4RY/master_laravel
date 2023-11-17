@@ -12,8 +12,7 @@ class HomeController extends Controller
 {
     public function __invoke()
     {
-        $blogs = Cache::tags(['blogs'])->remember('blogs',30,fn () => Blog::latest()->withCount('comments')->with('author')->with('tags')->get());
+        $blogs = Cache::tags(['blogs'])->remember('blogs',30,fn () => Blog::latestWithRelation());
         return view('blog.index',['blogs'=>$blogs]);
-
     }
 }

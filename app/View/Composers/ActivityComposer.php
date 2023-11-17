@@ -13,21 +13,21 @@ class ActivityComposer
 {
     public function compose(View $view)
     {
-        $mostCommentedBlogs = Cache::remember(
+        $mostCommentedBlogs = Cache::tags(['blog'])->remember(
             'mostCommentedBlogs',
             30,
             fn() => Blog::mostCommentBlog()
                 ->take(5)
                 ->get(),
         );
-        $authors = Cache::remember(
+        $authors = Cache::tags(['authors'])->remember(
             'authors',
             30,
             fn() => User::withMostBlogPosts()
                 ->take(5)
                 ->get(),
         );
-        $lastMonthBlog = Cache::remember(
+        $lastMonthBlog = Cache::tags(['authors'])->remember(
             'lastMonthBlog',
             30,
             fn() => User::withMostBlogPostsLastMonth()
