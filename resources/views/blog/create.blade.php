@@ -9,7 +9,7 @@
     </div>
 
     <div>
-        <form action="{{route('blogs.store')}}" class=" space-y-5" method="POST">
+        <form action="{{route('blogs.store')}}" class=" space-y-5" method="POST" enctype="multipart/form-data">
             @csrf
             @include('components.blog-form')
         </form>

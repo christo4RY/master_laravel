@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Abstract\AlertResponse;
 use App\Http\Requests\BlogRequest;
 use App\Models\Blog;
+use App\Models\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Stmt\TryCatch;
 
 class BlogController extends Controller
 {
@@ -42,7 +46,22 @@ class BlogController extends Controller
     public function store(BlogRequest $request)
     {
         $validated = $request->validated();
-        Blog::create($validated);
+
+        DB::beginTransaction();
+
+        try {
+            $blog = Blog::create([...$validated,'user_id'=>$request->user()->id]);
+            if($request->hasFile('file')){
+                $path = $request->file('file')->store('thumnails');
+                $blog->image()->create([
+                    'thumnail'=>$path
+                ]);
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => $th->getMessage()]);
+        }
         return AlertResponse::sendSuccessAlertResponse($validated['title'].' was created', to_route('blogs.index'));
     }
 
@@ -112,7 +131,26 @@ class BlogController extends Controller
     {
         $this->authorize('update',$blog);
         $validated = $request->validated();
-        $blog->update($validated);
+
+        $path = $request->file('file')->store('thumnails');
+        DB::beginTransaction();
+        try {
+
+            if($blog->image){
+                Storage::delete($blog->image->thumnail);
+                $blog->image->thumnail = $path;
+                $blog->image->save();
+            }else{
+                $blog->image()->save(
+                    Image::make(['thumnail' => $path])
+                );
+            }
+            $blog->update($validated);
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error'=>$th->getMessage()]);
+        }
         return AlertResponse::sendUpdateAlertResponse($blog->title.' was updated', to_route('blogs.index'));
     }
 
@@ -126,8 +164,12 @@ class BlogController extends Controller
 //        }
 
         $this->authorize('delete',$blog);
+
         $title= $blog->title;
-        $blog->delete();
+        DB::transaction(function() use($blog){
+            Storage::delete($blog->image->thumnail);
+            $blog->delete();
+        });
         return AlertResponse::sendErrorAlertResponse($title.' was deleted!', to_route('blogs.index'));
     }
 }

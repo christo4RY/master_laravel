@@ -5,7 +5,13 @@
 @section('content')
     <div class="w-full flex space-x-5">
         <div class="w-[70%] space-y-5  mx-auto p-4 border shadow-lg rounded">
-            <h1 class="text-2xl">{{ $blog->title }}</h1>
+            <div class="mb-2">
+                @if ($blog->image)
+                    <img src="{{  $blog->image->url() }}" class=" w-64 h-48"
+                        alt=">
+                @endif
+                    <h1 class="text-2xl object-cover rounded">{{ $blog->title }}</h1>
+            </div>
             <p class="text-lg">{{ $blog->content }}</p>
             <div>
                 {{ $counter }} Views
@@ -15,7 +21,7 @@
             <div>
                 <h4 class="text-xl">Comments</h4>
                 @auth
-                    @include('comment._form',['blog'=>$blog])
+                    @include('comment._form', ['blog' => $blog])
                 @else
                     <h3><a href="{{ route('login') }}" class=" underline text-blue-500">Sign in</a> Please Login </h3>
                 @endauth

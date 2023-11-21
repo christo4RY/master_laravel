@@ -9,7 +9,7 @@
     </div>
 
     <div>
-        <form action="{{route('blogs.update',['blog'=>$blog->id])}}" class=" space-y-5" method="POST">
+        <form action="{{route('blogs.update',['blog'=>$blog->id])}}" class=" space-y-5" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PATCH')
             @include('components.blog-form')
