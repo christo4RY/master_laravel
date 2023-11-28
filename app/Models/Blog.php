@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\DeletedAdminScope;
 use App\Models\Scopes\LatestScope;
+use App\Traits\Taggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,13 +13,13 @@ use Illuminate\Support\Facades\Cache;
 
 class Blog extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes,Taggable;
 
     protected $fillable = ['title', 'content', 'user_id'];
 
     public function comments()
     {
-        return $this->hasMany(Comment::class)->latest();
+            return $this->morphMany(Comment::class,'commentable');
     }
 
     public function author()
@@ -50,10 +51,7 @@ class Blog extends Model
             ->get();
     }
 
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class)->as('tagging');
-    }
+
 
     public static function boot()
     {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Taggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,13 +10,13 @@ use Illuminate\Support\Facades\Cache;
 
 class Comment extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory,SoftDeletes ,Taggable;
 
-    protected $fillable = ['content','blog_id','user_id'];
+    protected $fillable = ['content','user_id'];
 
-    public function blog()
+    public function commentable()
     {
-        return $this->belongsTo(Blog::class, 'blog_id');
+        return $this->morphTo();
     }
 
     public function user()
@@ -31,5 +32,6 @@ class Comment extends Model
             Cache::tags(['blogs'])->forget("show-blog-{$comment->blog_id}");
             Cache::tags(['blogs'])->forget("mostCommentedBlogs");
         });
+
     }
 }

@@ -11,7 +11,17 @@ class Tag extends Model
 
     protected $fillable = ['name'];
 
-    public function blogs(){
-        return $this->belongsToMany(blog::class)->as('blogs');
+    // public function blogs(){
+    //     return $this->belongsToMany(blog::class)->as('blogs');
+    // }
+
+    public function blogs()
+    {
+        return $this->morphedByMany(Blog::class,'taggable');
+    }
+
+    public function comments()
+    {
+        return $this->morphedByMany(Blog::class,'taggable');
     }
 }

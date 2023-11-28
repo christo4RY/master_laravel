@@ -17,7 +17,7 @@ class CommentController extends Controller
 
         $blog->comments()->create([
             'user_id'=>auth()->user()->id,
-            'content'=>$request->input('comment')
+            'content'=>$request->input('comment'),
         ]);
 
         session()->flash('message','Comment was ceated.');

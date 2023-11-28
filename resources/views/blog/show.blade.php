@@ -21,18 +21,12 @@
             <div>
                 <h4 class="text-xl">Comments</h4>
                 @auth
-                    @include('comment._form', ['blog' => $blog])
+                    @include('comment._form', ['route'=> route('comment.store',['blog'=>$blog->id])])
                 @else
                     <h3><a href="{{ route('login') }}" class=" underline text-blue-500">Sign in</a> Please Login </h3>
                 @endauth
-                @forelse ($blog->comments as $comment)
-                    @component('components.comment', ['type' => 'blue'])
-                        <p class="text-sm ">{{ $comment->content }}</p>
-                        <p class="text-sm">{{ $comment->created_at->diffForHumans() }}</p>
-                    @endcomponent
-                @empty
-                    <p class="text-red-500">no comment yet</p>
-                @endforelse
+                @include('comment.show',['comments'=>$blog->comments])
+
             </div>
             <div class="flex justify-end">
                 <a href="{{ route('blogs.index') }}" class="py-1 px-3 bg-blue-500 text-white rounded">Back</a>

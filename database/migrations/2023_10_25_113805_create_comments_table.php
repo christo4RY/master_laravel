@@ -12,9 +12,9 @@ return new class extends Migration {
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->longText('content');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('blog_id')->constrained()->cascadeOnDelete();
+            $table->longText('content');
+            $table->morphs('commentable');
             $table->timestamps();
         });
     }

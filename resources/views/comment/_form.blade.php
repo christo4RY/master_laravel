@@ -1,4 +1,4 @@
-<form action="{{ route('comment.store', ['blog' => $blog->id]) }}" method="POST">
+<form action="{{ $route }}" method="POST">
     @csrf
     <div class="flex space-y-2 flex-col my-3">
         <label for="comment">Comment</label>
