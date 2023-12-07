@@ -73,4 +73,8 @@ class User extends Authenticatable
             return $query->whereBetween(static::CREATED_AT,[now()->subMonth(1),now()]);
         }])->having('blogs_count','>=',2)->orderBy('blogs_count','desc');
     }
+
+    public function scopeGetAdmin(Builder $builder){
+        return $builder->where('isAdmin',true);
+    }
 }

@@ -24,14 +24,4 @@ class Comment extends Model
         return $this->belongsTo(User::class,"user_id");
     }
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function(Comment $comment){
-            Cache::tags(['blogs'])->forget("show-blog-{$comment->blog_id}");
-            Cache::tags(['blogs'])->forget("mostCommentedBlogs");
-        });
-
-    }
 }

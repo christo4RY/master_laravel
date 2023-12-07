@@ -57,16 +57,5 @@ class Blog extends Model
     {
         self::addGlobalScope(new DeletedAdminScope());
         parent::boot();
-        self::deleting(function (Blog $blog) {
-            $blog->comments()->delete();
-            Cache::tags(['blogs'])->forget("show-blog-{$blog->id}");
-        });
-
-        self::updating(function (Blog $blog) {
-            Cache::tags(['blogs'])->forget("show-blog-{$blog->id}");
-        });
-        self::restoring(function (Blog $blog) {
-            $blog->comments()->restore();
-        });
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Abstract\AlertResponse;
+use App\Events\Posted;
 use App\Http\Requests\BlogRequest;
 use App\Models\Blog;
 use App\Models\Image;
@@ -57,6 +58,7 @@ class BlogController extends Controller
                     'thumnail'=>$path
                 ]);
             }
+            event(new Posted);
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -167,7 +169,10 @@ class BlogController extends Controller
 
         $title= $blog->title;
         DB::transaction(function() use($blog){
-            Storage::delete($blog->image->thumnail);
+            if($blog->image?->thumnail){
+                Storage::delete($blog->image?->thumnail);
+                $blog->image()?->delete();
+            }
             $blog->delete();
         });
         return AlertResponse::sendErrorAlertResponse($title.' was deleted!', to_route('blogs.index'));

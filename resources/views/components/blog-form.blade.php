@@ -14,9 +14,9 @@
         <p class="text-red-500 text-sm">{{ $message }}</p>
     @enderror
 </div>
-@if ($blog->image?->thumnail)
-    <img src="{{$blog->image->url()}}" class=" w-52 h-32 object-cover" alt="">
-@endif
+{{-- @if ($blog?->image?->thumnail)
+    <img src="{{$blog?->image->url()}}" class=" w-52 h-32 object-cover" alt="">
+@endif --}}
 <div class="flex flex-col gap-2">
     <label for="file" class=" uppercase text-slate-500">Thumnail</label>
     <input name="file" type="file" id="file" value="{{ old('file', optional($blog ?? null)->image?->thumnail) }}"
