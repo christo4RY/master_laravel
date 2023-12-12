@@ -28,6 +28,16 @@
                         <p class="text-red-500">{{$message}}</p>
                     @enderror
                 </div>
+                <div class="flex space-y-2 flex-col my-3">
+                    <label for="local">Language</label>
+                    <select name="local" id="local">
+                        <option value="en" {{$user->local == "en" ? 'selected' : ''}}>English</option>
+                        <option value="es" {{$user->local == "es" ? 'selected' : ''}}>Spaich</option>
+                    </select>
+                    @error('local')
+                        <p class="text-red-500">{{$message}}</p>
+                    @enderror
+                </div>
                 <button class="py-0.5 xl:py-1 px-2 xl:px-3 bg-green-400 rounded">Save</button>
             </form>
         </div>

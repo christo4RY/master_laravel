@@ -6,7 +6,7 @@
     <div class="flex space-x-7">
         <div class="w-full md:w-[75%]">
             <div class="mb-4 flex justify-between items-center">
-                <h1 class="text-2xl font-bold">Posts</h1>
+                <h1 class="text-2xl font-bold">{{__('Blog Posts')}}</h1>
                 <a href="{{ route('blogs.create') }}"
                     class=" cursor-pointer hover:bg-green-300 transition-all duration-300 flex items-center gap-3 p-1  rounded bg-green-200 text-slate-500 px-2 shadow">
                     <h5>Create</h5>

@@ -1,16 +1,16 @@
 <div class=" bg-blue-100 flex justify-between px-5 items-center  h-12">
     <div>
-        <a href="{{route('home.index')}}" class="text-2xl font-bold">Master</a>
+        <a href="{{route('home.index')}}" class="text-2xl font-bold">{{__('App Name')}}</a>
     </div>
     <nav class="flex gap-9 items-center">
-        <a href="{{route('home.index')}}">Home</a>
+        <a href="{{route('home.index')}}">{{__('Home')}}</a>
         <a href="#">About</a>
-        <a href="{{route('blogs.index')}}">Blogs</a>
-        <a href="{{route('blogs.create')}}">Add Blog</a>
-        <a href="#">Contact Us</a>
+        <a href="{{route('blogs.index')}}">{{__('Blog Posts')}}</a>
+        <a href="{{route('blogs.create')}}">{{__("Add Blog Posts")}}</a>
+        <a href="#">{{__("Contact")}}</a>
         @guest()
-        <a href="{{route('register')}}">Register</a>
-        <a href="{{route('login')}}">Login</a>
+        <a href="{{route('register')}}">{{__('Register')}}</a>
+        <a href="{{route('login')}}">{{__('Login')}}</a>
         @endguest
         @auth()
 

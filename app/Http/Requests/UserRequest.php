@@ -23,7 +23,8 @@ class UserRequest extends FormRequest
     {
         return [
             'name'=>'required|min:3',
-            'avatar'=>'required|mimes:png,jpg'
+            'avatar'=>'required|mimes:png,jpg',
+            'local'=>'required|in:en,es'
         ];
     }
 }

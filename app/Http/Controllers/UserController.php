@@ -73,7 +73,8 @@ class UserController extends Controller
             );
         }
         $user->update([
-            'name'=>$request->name
+            'name'=>$request->name,
+            'local'=>$request->local
         ]);
         return redirect()->back()->withStatus("User profile updated");
     }
