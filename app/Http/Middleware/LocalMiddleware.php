@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Response;
 
 class LocalMiddleware
@@ -17,6 +18,7 @@ class LocalMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+
         $local = null;
         if(Auth::check() && !session()->has('local')){
             $local = $request->user()->local;
@@ -37,6 +39,7 @@ class LocalMiddleware
         }
 
         App::setLocale($local);
+
         return $next($request);
     }
 }

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\CounterContract;
+use App\Facades\CounterFacade;
 use App\Http\Requests\UserRequest;
 use App\Models\Image;
 use App\Models\User;
+use App\Services\Counter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -41,7 +44,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('user.show', ['user' => $user]);
+        return view('user.show', ['user' => $user,'counter'=> CounterFacade::increament("user-$user->id")]);
     }
 
     /**

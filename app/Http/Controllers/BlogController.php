@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Abstract\AlertResponse;
+use App\Contracts\CounterContract;
 use App\Events\Posted;
+use App\Facades\CounterFacade;
 use App\Http\Requests\BlogRequest;
 use App\Models\Blog;
 use App\Models\Image;
 use App\Models\User;
+use App\Services\Counter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +21,6 @@ use PhpParser\Node\Stmt\TryCatch;
 
 class BlogController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth')->only(['create','edit','destroy']);
@@ -74,40 +76,9 @@ class BlogController extends Controller
     {
         $showBlog  = Cache::tags(['blogs'])->remember("show-blog-{$blog->id}",30,fn () => $blog->load(['comments','tags']));
 
-        $sessionId = session()->getId();
-        $counterKey = "blog-{$blog->id}-counter";
-        $userKey = "blog-{$blog->id}-users";
-
-        $users = Cache::get($userKey,[]);
-        $usersUpdate = [];
-        $diffrence = 0;
-        $now = now();
-        foreach ($users as $session => $lastTime){
-            if($now->diffInMinutes($lastTime) >= 1){
-                $diffrence--;
-            }else{
-                $usersUpdate[$session] = $lastTime;
-            }
-        }
-
-        if(!array_key_exists($sessionId,$users) || $now->diffInMinutes($users[$sessionId]) >= 1){
-            $diffrence++;
-        }
-
-        $usersUpdate[$sessionId] = $now;
-        Cache::forever($userKey,$usersUpdate);
-
-        if(!Cache::has($counterKey)){
-            Cache::forever($counterKey,1);
-        }else{
-            Cache::increment($counterKey,$diffrence);
-        }
-
-        $counter = Cache::get($counterKey);
-
         return view('blog.show', [
             'blog'=>$showBlog,
-            'counter'=>$counter
+            'counter'=> CounterFacade::increament("blog-$blog->id")
         ]);
     }
 
